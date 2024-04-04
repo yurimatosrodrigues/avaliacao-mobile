@@ -8,7 +8,7 @@ export default function LoginPage() {
   const [password, setPassword] = React.useState('');
 
   function validate(username: string, password: string){
-    return (username === 'uedsonreis' && password === '123456');
+    return (username === 'uedsonreis'.toUpperCase() && password === '123456');
   }
 
   function login(){
