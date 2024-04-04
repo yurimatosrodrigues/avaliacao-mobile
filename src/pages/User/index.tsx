@@ -2,13 +2,17 @@ import React from 'react';
 import { Alert, Button, Text, TextInput, View } from 'react-native';
 import styles from './styles';
 import MyInput from '../../components/MyInput';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 export default function CadastroPage() {
+  const navigation = useNavigation<NavigationProp<any>>();
 
   const [nome, setNome] = React.useState('');
   const [login, setLogin] = React.useState('');
   const [senha, setSenha] = React.useState('');
   const [senhaConfirmada, setSenhaConfirmada] = React.useState('');
+
+  navigation.setOptions({ title:"Novo usuário" });
 
   function validate(nome: string, login: string, senha: string, senhaConfirmada: string){
     if(nome.trim() != '' && login.trim() != '' && 
@@ -38,8 +42,7 @@ export default function CadastroPage() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Página de Cadastro</Text>
+    <View style={styles.container}>     
 
       <MyInput title='Nome' value={nome} change={setNome} />
 
