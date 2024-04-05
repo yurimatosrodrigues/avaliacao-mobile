@@ -3,26 +3,24 @@ import styles from './styles';
 import React from 'react';
 import MyInput from '../../components/MyInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { authService } from '../../services/auth.service';
 
 export default function LoginPage() {
   const navigation = useNavigation<NavigationProp<any>>();
   const [username, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  navigation.setOptions( { title: 'Página de Acesso' } );
-
-  function validate(username: string, password: string){    
-    return (username === 'teste'.toUpperCase() && password === '123456');
-  }
+  //navigation.setOptions( { title: 'Página de Acesso' } );
 
   function login(){
-    if (validate(username, password)){
-        Alert.alert('Logado com sucesso!');
+    authService.login(username, password).then(isLogged => {
+      if (isLogged){        
         navigation.navigate('Home');
-    }
-    else{
-        Alert.alert('Login e/ou senha incorreto(s)!');
-    }
+      }
+      else{
+          Alert.alert('Login e/ou senha incorreto(s)!');
+      }
+    }).catch(error => Alert.alert(error))
   }
 
   return (

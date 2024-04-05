@@ -3,6 +3,7 @@ import { Alert, Button, Text, TextInput, View } from 'react-native';
 import styles from './styles';
 import MyInput from '../../components/MyInput';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { userService } from '../../services/user.service'
 
 export default function CadastroPage() {
   const navigation = useNavigation<NavigationProp<any>>();
@@ -12,13 +13,15 @@ export default function CadastroPage() {
   const [senha, setSenha] = React.useState('');
   const [senhaConfirmada, setSenhaConfirmada] = React.useState('');
 
-  navigation.setOptions({ title:"Novo usuário" });
+//  navigation.setOptions({ title:"Novo usuário" });
 
   function validate(nome: string, login: string, senha: string, senhaConfirmada: string){
     if(nome.trim() != '' && login.trim() != '' && 
        senha.trim() != '' && senhaConfirmada.trim() != ''){
       if(senha === senhaConfirmada){
-        Alert.alert('Usuário cadastrado com sucesso!');
+        userService.create(nome, login, senha).then(isSaved => {
+          if(isSaved) navigation.goBack();
+        });
         return true;
       }
       else{
