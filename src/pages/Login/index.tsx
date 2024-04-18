@@ -13,7 +13,7 @@ export default function LoginPage() {
   //navigation.setOptions( { title: 'Página de Acesso' } );
 
   function login(){
-    authService.login(username, password).then(isLogged => {
+    authService.login(username.trim(), password).then(isLogged => {
       if (isLogged){        
         navigation.navigate('Home');
       }

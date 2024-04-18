@@ -5,7 +5,8 @@ type Props = {
     title: string,
     value: string,    
     change: (value: string) => void,
-    isPassword?: boolean
+    isPassword?: boolean,
+    disable?: boolean
 }
 
 export default function MyInput(props: Props) {
@@ -17,6 +18,7 @@ export default function MyInput(props: Props) {
                 value={props.value} 
                 onChangeText={ props.change }
                 secureTextEntry={props.isPassword}
+                readOnly={props.disable}
             />
        </View>
     )
