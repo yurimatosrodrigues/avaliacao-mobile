@@ -1,7 +1,6 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Alert, Button, FlatList, Text, TextInput, View } from 'react-native';
-import { authRepository } from '../../services/auth.repository';
+import { Button, FlatList, Text, TextInput, View } from 'react-native';
 import { userService } from '../../services/user.service';
 import UserView from '../../components/UserView';
 
