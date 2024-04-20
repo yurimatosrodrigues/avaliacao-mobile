@@ -3,13 +3,13 @@ import { Alert, Button, Text, TextInput, View } from 'react-native';
 import styles from './styles';
 import MyInput from '../../components/MyInput';
 import { NavigationProp, useNavigation, useRoute } from '@react-navigation/native';
-import { userService } from '../../services/user.service'
+import { roleService } from '../../services/role.service'
 
 type Props = {
   id: number
 }
 
-export default function CadastroPage() {
+export default function AddRolePage() {
   const navigation = useNavigation<NavigationProp<any>>();
 
   const route = useRoute()
@@ -18,53 +18,40 @@ export default function CadastroPage() {
 
 
   const [nome, setNome] = React.useState('');
-  const [login, setLogin] = React.useState('');
-  const [senha, setSenha] = React.useState('');
-  const [senhaConfirmada, setSenhaConfirmada] = React.useState('');
+  const [descricao, setDescricao] = React.useState(''); 
 
   React.useEffect(() => {
     if(id > 0){
-      navigation.setOptions({ title: 'Editar Usuário' })
+      navigation.setOptions({ title: 'Editar role' })
       fetchUser()
     }
     else{
-      navigation.setOptions({ title: 'Novo Usuário' })
+      navigation.setOptions({ title: 'New role' })
     }
     
   }, [id])
 
   function fetchUser(){
     if(id>0){
-      userService.getById(id).then(user => {
-        setNome(user.name);
-        setLogin(user.username);
+      roleService.getById(id).then(role => {
+        setNome(role.name);
+        setDescricao(role.description);
       })
     }
   }
 
 
-  function validate(nome: string, login: string, senha: string, senhaConfirmada: string){
-    if(nome.trim() != '' && login.trim() != '' && 
-       senha.trim() != '' && senhaConfirmada.trim() != ''){
-      if(senha === senhaConfirmada){
-        userService.create(nome, login, senha).then(result => {
-          if(result === true){
-            setNome('');
-            setLogin('');
-            setSenha('');
-            setSenhaConfirmada('');
-            navigation.goBack();
-          } 
-          else Alert.alert(result + '');
+  function create(nome: string, descricao: string){
+    if(nome.trim() != '' && descricao.trim() != ''){        
+      roleService.create(nome, descricao).then(result => {
+        if(result === true){
+          setNome('');
+          setDescricao('');          
+          navigation.goBack();
+        } 
+        else Alert.alert(result + '');
 
-        }).catch(error => console.log(error));
-
-        return true;
-      }
-      else{
-        Alert.alert('Senha informada não é igual à confirmação de senha!');
-        return false;
-      }
+      }).catch(error => console.log(error));
     }
     else{
       Alert.alert('Algum campo não foi preenchido!');
@@ -73,33 +60,7 @@ export default function CadastroPage() {
   }
 
   function salvar(){  
-    
-    if(id>0) atualizar()
-    else{
-      if(validate(nome, login, senha, senhaConfirmada)){
-        setNome('');
-        setLogin('');
-        setSenha('');
-        setSenhaConfirmada('');
-      }    
-    }     
-  }
-
-  function atualizar(){
-    if(!nome || nome.trim().length < 1){
-      Alert.alert('Informe o nome!');
-      return false;
-    }
-
-    userService.update(id, nome).then(result => {
-      if(result === true){
-        setNome('');
-        setLogin('');
-        setSenha('');
-        setSenhaConfirmada('');
-        navigation.goBack();
-      }
-    })
+    create(nome, descricao);    
   }
 
   return (
@@ -107,16 +68,8 @@ export default function CadastroPage() {
 
       <MyInput title='Nome' value={nome} change={setNome}  />
 
-      <MyInput title='Login' value={login} change={setLogin} disable = {id>0} />
-
-      {(id===0) && (
-        <>
-          <MyInput title='Senha' value={senha} change={setSenha} isPassword />
-
-          <MyInput title='Senha confirmada' value={senhaConfirmada} change={setSenhaConfirmada} isPassword />
-        </>        
-      )}      
-
+      <MyInput title='Descrição' value={descricao} change={setDescricao} />
+      
       <View style={styles.buttonView}>
         <Button color='purple' title='Cadastrar' onPress={salvar} />
       </View>

@@ -15,7 +15,7 @@ export default function LoginPage() {
   function login(){
     authService.login(username.trim(), password).then(isLogged => {
       if (isLogged){        
-        navigation.navigate('ListRole');
+        navigation.navigate('Home');
       }
       else{
           Alert.alert('Login e/ou senha incorreto(s)!');

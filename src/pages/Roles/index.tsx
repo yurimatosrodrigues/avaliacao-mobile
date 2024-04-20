@@ -1,7 +1,7 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Button, FlatList, Text, TextInput, View } from 'react-native';
-import { roseService } from '../../services/role.service';
+import { roleService } from '../../services/role.service';
 import RoleView from '../../components/RoleView';
 
 export default function RolePage() {
@@ -25,7 +25,7 @@ export default function RolePage() {
     async function fetchRole(){
         setRefreshing(true)
         try{
-            const list = await roseService.get()
+            const list = await roleService.get()
             if(list) setRoles(list);
         }
         catch{
