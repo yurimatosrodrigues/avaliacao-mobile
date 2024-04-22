@@ -28,6 +28,14 @@ export default StyleSheet.create({
       padding: 10
     },
 
+    inputSelect:{
+      borderWidth: 1,
+      width: Dimensions.get('screen').width - 100,
+      marginBottom: 20,
+      fontSize: 16,
+      padding: 10,
+    },
+
     buttonView: {
         marginTop: 10,
         width: Dimensions.get('screen').width - 220

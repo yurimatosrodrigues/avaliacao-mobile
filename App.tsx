@@ -5,6 +5,7 @@ import CadastroPage from './src/pages/User';
 import HomePage from './src/pages/Home';
 import RolePage from './src/pages/Roles';
 import AddRolePage from './src/pages/AddRole';
+import MenuPage from './src/pages/Menu';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name="Cadastro" component={CadastroPage} />
         <Stack.Screen name="ListRole" component={RolePage} />
         <Stack.Screen name="AddRole" component={AddRolePage} />
+        <Stack.Screen name="Menu" component={MenuPage} />
       </Stack.Navigator>
 
     </NavigationContainer>

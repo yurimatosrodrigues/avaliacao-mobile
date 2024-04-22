@@ -1,7 +1,7 @@
 import { authRepository } from "./auth.repository";
 
 class RoleService{
-    private readonly baseUrl = 'http://192.168.1.69:3030/roles';
+    private readonly baseUrl = 'http://192.168.1.64:3030/roles';
 
     private async getHeaders(){
         const logged = await authRepository.getLoggedUser();               

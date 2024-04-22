@@ -1,7 +1,7 @@
 import { authRepository } from "./auth.repository";
 
 class UserService{
-    private readonly baseUrl = 'http://192.168.1.69:3030/users';
+    private readonly baseUrl = 'http://192.168.1.64:3030/users';
 
     private async getHeaders(){
         const logged = await authRepository.getLoggedUser();               
@@ -13,7 +13,7 @@ class UserService{
         };
     }
     
-    public async create (name: string, username: string, password: string){
+    public async create (name: string, username: string, password: string, roles: string[]){
         const logged = await authRepository.getLoggedUser();
         const header = await this.getHeaders();
 
@@ -24,7 +24,7 @@ class UserService{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${logged.token}`
                 },
-                body: JSON.stringify({ name, username, password })
+                body: JSON.stringify({ name, username, password, roles })
             });
 
             if(response.status === 400) return 'Usuário já existe';
@@ -73,7 +73,7 @@ class UserService{
         return null
     }
 
-    public async update (id: number, name: string){
+    public async update (id: number, name: string, roles: string[]){
         const logged = await authRepository.getLoggedUser();
         if(logged){
             const response = await fetch(`${this.baseUrl}/${id}`, {
@@ -82,7 +82,7 @@ class UserService{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${logged.token}`
                 },
-                body: JSON.stringify({ name })
+                body: JSON.stringify({ name, roles })
             });
             
             if(response.status === 401) return null; 

@@ -34,8 +34,8 @@ export default function HomePage() {
             if(list) setUsers(list);
             else logOut();
         }
-        catch{
-            console.error('Erro ao autalizar lista.')
+        catch(e){
+            console.error('Erro ao atualizar lista: '+ e)
         }
         setRefreshing(false)
     }

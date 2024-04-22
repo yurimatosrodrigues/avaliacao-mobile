@@ -4,6 +4,9 @@ import styles from './styles';
 import MyInput from '../../components/MyInput';
 import { NavigationProp, useNavigation, useRoute } from '@react-navigation/native';
 import { userService } from '../../services/user.service'
+import { roleService } from '../../services/role.service'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 
 type Props = {
   id: number
@@ -16,43 +19,45 @@ export default function CadastroPage() {
 
   const id: number = route.params ? (route.params as any).id : 0
 
-
   const [nome, setNome] = React.useState('');
   const [login, setLogin] = React.useState('');
   const [senha, setSenha] = React.useState('');
   const [senhaConfirmada, setSenhaConfirmada] = React.useState('');
+  const [roles, setRoles] = React.useState<any[]>([]);  
+  const [selectedRoles, setSelectedRoles] = React.useState<any[]>([]);  
 
   React.useEffect(() => {
-    if(id > 0){
+    getRoles();
+    if(id > 0){      
       navigation.setOptions({ title: 'Editar Usuário' })
       fetchUser()
     }
     else{
       navigation.setOptions({ title: 'Novo Usuário' })
     }
-    
   }, [id])
 
   function fetchUser(){
-    if(id>0){
+    if(id>0){      
       userService.getById(id).then(user => {
         setNome(user.name);
         setLogin(user.username);
+        setSelectedRoles(user.roles);
       })
+      
     }
   }
-
 
   function validate(nome: string, login: string, senha: string, senhaConfirmada: string){
     if(nome.trim() != '' && login.trim() != '' && 
        senha.trim() != '' && senhaConfirmada.trim() != ''){
-      if(senha === senhaConfirmada){
-        userService.create(nome, login, senha).then(result => {
+      if(senha === senhaConfirmada){        
+        userService.create(nome, login, senha, selectedRoles).then(result => {
           if(result === true){
             setNome('');
             setLogin('');
             setSenha('');
-            setSenhaConfirmada('');
+            setSenhaConfirmada('');            
             navigation.goBack();
           } 
           else Alert.alert(result + '');
@@ -81,6 +86,7 @@ export default function CadastroPage() {
         setLogin('');
         setSenha('');
         setSenhaConfirmada('');
+        setSelectedRoles([]);
       }    
     }     
   }
@@ -91,15 +97,23 @@ export default function CadastroPage() {
       return false;
     }
 
-    userService.update(id, nome).then(result => {
+    userService.update(id, nome, selectedRoles).then(result => {
       if(result === true){
         setNome('');
         setLogin('');
         setSenha('');
         setSenhaConfirmada('');
+        setSelectedRoles([]);
         navigation.goBack();
       }
     })
+  }
+
+  async function getRoles(){
+    const list = await roleService.get();
+    if(list){      
+      setRoles(list);
+    } 
   }
 
   return (
@@ -108,7 +122,20 @@ export default function CadastroPage() {
       <MyInput title='Nome' value={nome} change={setNome}  />
 
       <MyInput title='Login' value={login} change={setLogin} disable = {id>0} />
-
+            
+      <View style={styles.inputSelect}>
+        <View>
+          <SectionedMultiSelect
+            items={roles}
+            IconRenderer={Icon}
+            uniqueKey="id"
+            onSelectedItemsChange={setSelectedRoles}
+            selectedItems={selectedRoles}
+          />
+        </View>
+      </View>
+      
+    
       {(id===0) && (
         <>
           <MyInput title='Senha' value={senha} change={setSenha} isPassword />
